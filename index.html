@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kong· 个人主页</title>
+<meta name="description" content="kong。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231E3A2F'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='%23F7F3EA' font-family='serif'%3E林%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<style>
+/* ============ 设计令牌 ============ */
+:root{
+  --ink:#2A4A52;        /* 主文字：深青灰 */
+  --ink-deep:#16343D;   /* 标题：深青黑 */
+  --ink-soft:#5E7B80;   /* 次要文字：灰青 */
+  --paper:#F3FAF9;      /* 页面背景：极淡青白 */
+  --paper-2:#E5F2F0;    /* 卡片底：淡青 */
+  --accent:#39C5BB;     /* 强调色：初音青绿 */
+  --line:#CFE1DE;       /* 发丝线 */
+  --white:#FDFEFE;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background-image:url("miku.png");/*初音未来背景图*/
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+  color:var(--ink);
+  line-height:1.75;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+body::after{
+  content:"";position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(247,243,234,.60);/*调节背景灰度*  目前.50*/
+  z-index:-1;
+}/*使背景 加上白色薄雾*/
+
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+::selection{background:var(--accent);color:#fff}
+
+/* ============ 版心 ============ */
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+
+/* ============ 顶部导航 ============ */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(247,243,234,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  max-width:960px;margin:0 auto;padding:12px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink-deep);letter-spacing:2px}
+.logo em{font-style:normal;color:var(--accent)}
+.nav-links{display:flex;gap:28px}
+.nav-links a{
+  font-size:15px;color:var(--ink-soft);
+  padding:4px 2px;border-bottom:2px solid transparent;
+  transition:color .2s,border-color .2s;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--ink-deep);border-bottom-color:var(--accent)}
+
+/* ============ 视图容器 ============ */
+.view{display:none}
+.view.active{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ============ Hero ============ */
+.hero{padding:84px 0 72px;position:relative}
+.hero-vertical{
+  position:absolute;right:0;top:88px;
+  writing-mode:vertical-rl;
+  font-family:var(--serif);font-size:36px;letter-spacing:20px;
+  color:var(--line);font-weight:600;
+}
+.hero-kicker{
+  display:flex;align-items:center;gap:12px;
+  color:var(--accent);font-size:14px;font-weight:500;margin-bottom:20px;
+}
+.hero-kicker::before{content:"";width:36px;height:2px;background:var(--accent)}
+.hero h1{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(44px,7vw,72px);
+  line-height:1.15;color:var(--ink-deep);
+  letter-spacing:2px;
+}
+.hero h1 .dot{color:var(--accent)}
+.hero-sub{
+  margin-top:24px;font-size:18px;color:var(--ink-soft);
+  max-width:560px;font-weight:300;
+}
+.hero-actions{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap}
+.btn{
+  display:inline-block;padding:12px 28px;border-radius:2px;
+  font-size:15px;font-weight:500;cursor:pointer;
+  transition:all .2s;border:1px solid transparent;
+}
+.btn-primary{background:var(--ink-deep);color:var(--paper)}
+.btn-primary:hover{background:var(--accent)}
+.btn-ghost{border-color:var(--ink);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.hero-meta{
+  margin-top:56px;padding-top:24px;border-top:1px solid var(--line);
+  display:flex;gap:48px;flex-wrap:wrap;
+}
+.hero-meta .num{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--ink-deep)}
+.hero-meta .label{font-size:13px;color:var(--ink-soft)}
+
+/* ============ 区块 ============ */
+.section{padding:56px 0}
+.section-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:36px;border-bottom:1px solid var(--line);padding-bottom:14px;
+}
+.section-head h2{
+  font-family:var(--serif);font-weight:700;font-size:28px;color:var(--ink-deep);
+}
+.section-head .more{font-size:14px;color:var(--ink-soft);cursor:pointer;transition:color .2s}
+.section-head .more:hover{color:var(--accent)}
+
+/* ============ 文章时间轴 ============ */
+.timeline{display:grid;grid-template-columns:110px 20px 1fr;column-gap:16px}
+.tl-node{grid-column:2;display:flex;flex-direction:column;align-items:center}
+.tl-dot{
+  width:11px;height:11px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent);
+  flex-shrink:0;margin-top:26px;
+}
+.tl-line{
+  width:2px;flex:1;
+  background:var(--line);
+}
+.tl-date{grid-column:1;text-align:right;padding-top:20px;font-size:14px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.tl-date .year{display:block;font-family:var(--serif);font-size:18px;color:var(--ink-deep);font-weight:600}
+.tl-card{
+  grid-column:3;margin-bottom:8px;padding:18px 22px;
+  background:var(--white);border:1px solid var(--line);border-radius:3px;
+  cursor:pointer;transition:box-shadow .2s,transform .2s,border-color .2s;
+}
+.tl-card:hover{box-shadow:0 4px 16px rgba(30,58,47,.1);transform:translateX(4px);border-color:var(--accent)}
+.tl-card h3{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--ink-deep)}
+.tl-card h3:hover{color:var(--accent)}
+.tl-card p{margin-top:6px;font-size:14px;color:var(--ink-soft)}
+.tl-tags{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{
+  font-size:12px;color:var(--ink-soft);
+  border:1px solid var(--line);padding:1px 10px;border-radius:20px;background:var(--paper);
+}
+
+/* ============ 分类 ============ */
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cat-card{
+  padding:22px;background:var(--white);border:1px solid var(--line);border-radius:3px;
+  cursor:pointer;transition:all .2s;
+}
+.cat-card:hover{border-color:var(--accent);background:var(--paper-2)}
+.cat-card .c-name{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink-deep)}
+.cat-card .c-count{font-size:13px;color:var(--accent);margin-top:4px}
+.cat-card .c-desc{font-size:13px;color:var(--ink-soft);margin-top:8px}
+
+/* ============ 归档 ============ */
+.archive-list{display:flex;flex-direction:column}
+.arc-item{
+  display:flex;align-items:baseline;gap:20px;
+  padding:16px 4px;border-bottom:1px dashed var(--line);
+  cursor:pointer;transition:all .2s;
+}
+.arc-item:hover{background:var(--white);padding-left:14px}
+.arc-item .a-date{font-size:13px;color:var(--ink-soft);min-width:90px;font-variant-numeric:tabular-nums}
+.arc-item .a-title{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink-deep);flex:1}
+.arc-item:hover .a-title{color:var(--accent)}
+.arc-item .a-tag{font-size:12px;color:var(--ink-soft)}
+.filter-bar{margin-bottom:24px;display:flex;gap:10px;flex-wrap:wrap}
+.filter-btn{
+  font-size:13px;padding:5px 16px;border-radius:20px;cursor:pointer;
+  border:1px solid var(--line);color:var(--ink-soft);background:transparent;transition:all .2s;
+}
+.filter-btn:hover{border-color:var(--ink)}
+.filter-btn.on{background:var(--ink-deep);color:var(--paper);border-color:var(--ink-deep)}
+
+/* ============ 关于 ============ */
+.about-grid{display:grid;grid-template-columns:220px 1fr;gap:48px;align-items:start}
+.avatar-box{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:3px;
+  padding:28px;display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.avatar-box svg{border-radius:50%;border:3px solid var(--white);box-shadow:var(--shadow)}
+.avatar-name{font-family:var(--serif);font-weight:700;color:var(--ink-deep)}
+.avatar-role{font-size:13px;color:var(--ink-soft)}
+.about-body h2{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--ink-deep);margin-bottom:18px}
+.about-body p{margin-bottom:14px;color:var(--ink);font-weight:300}
+.about-info{margin-top:20px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.info-item{border-left:3px solid var(--accent);padding-left:12px}
+.info-item .i-label{font-size:12px;color:var(--ink-soft)}
+.info-item .i-value{font-size:15px;color:var(--ink-deep);font-weight:500}
+
+/* ============ 文章详情 ============ */
+.post-head{padding:56px 0 32px;border-bottom:1px solid var(--line);margin-bottom:36px}
+.post-head .back{
+  display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--ink-soft);
+  cursor:pointer;margin-bottom:20px;transition:color .2s;
+}
+.post-head .back:hover{color:var(--accent)}
+.post-head h1{font-family:var(--serif);font-weight:900;font-size:clamp(28px,4vw,40px);color:var(--ink-deep);line-height:1.3}
+.post-meta{margin-top:14px;font-size:14px;color:var(--ink-soft);display:flex;gap:18px}
+.post-body{max-width:680px;padding-bottom:64px}
+.post-body h3{
+  font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink-deep);
+  margin:36px 0 12px;
+}
+.post-body p{margin-bottom:16px;color:var(--ink);font-weight:300}
+.post-body code{
+  background:var(--paper-2);border:1px solid var(--line);
+  padding:2px 8px;border-radius:3px;font-size:14px;
+}
+.post-body blockquote{
+  border-left:3px solid var(--accent);padding:4px 20px;
+  color:var(--ink-soft);font-style:normal;margin:20px 0;background:var(--paper-2);
+}
+.post-body ul{margin:0 0 16px 22px;font-weight:300}
+.post-body li{margin-bottom:6px}
+
+/* ============ 页脚 ============ */
+.footer{border-top:1px solid var(--line);padding:32px 0;margin-top:48px}
+.footer-inner{max-width:960px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--ink-soft)}
+.footer a:hover{color:var(--accent)}
+
+/* ============ 空状态 ============ */
+.empty{text-align:center;padding:60px 0;color:var(--ink-soft)}
+
+/* ============ 响应式 ============ */
+@media(max-width:720px){
+  .hero{padding:56px 0 48px}
+  .hero-vertical{display:none}
+  .timeline{grid-template-columns:80px 16px 1fr;column-gap:10px}
+  .tl-date{font-size:12px}
+  .tl-date .year{font-size:15px}
+  .cats{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr;gap:28px}
+  .about-info{grid-template-columns:1fr}
+  .nav-links{gap:18px}
+  .nav-links a{font-size:14px}
+  .hero-meta{gap:28px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部导航 ===== -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#/home" data-nav="home">kong<em>.</em></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#/home" data-nav="home" class="active">首页</a>
+      <a href="#/archive" data-nav="archive">归档</a>
+      <a href="#/about" data-nav="about">关于</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===== 视图：首页 ===== -->
+  <div class="view active" id="view-home">
+    <section class="hero">
+      <div class="hero-vertical">M I K U <br>(｡･ω･｡)ﾉ♡</div>
+      <div class="hero-kicker">个人主页 HI！HI！HI！~~</div>
+      <h1>你好，<span class="dot">kong-zou</span></h1>
+      <p class="hero-sub">一个人。</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#/archive">查看文章</a>
+        <a class="btn btn-ghost" href="#/about">关于我</a>
+      </div>
+      <div class="hero-meta">
+        <div><div class="num" id="statPosts">0</div><div class="label">篇原创文章</div></div>
+        <div><div class="num" id="statWords">0</div><div class="label">累计字数</div></div>
+        <div><div class="num" id="statYears">0</div><div class="label">开始写作</div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>最近文章</h2>
+        <span class="more" data-goto="archive">查看全部</span>
+      </div>
+      <div class="timeline" id="recentTimeline"><!-- 由 JS 渲染 --></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>分类</h2>
+      </div>
+      <div class="cats" id="catGrid"><!-- 由 JS 渲染 --></div>
+    </section>
+  </div>
+
+  <!-- ===== 视图：归档 ===== -->
+  <div class="view" id="view-archive">
+    <section class="section">
+      <div class="section-head">
+        <h2>全部文章</h2>
+      </div>
+      <div class="filter-bar" id="filterBar"><!-- 由 JS 渲染 --></div>
+      <div class="archive-list" id="archiveList"><!-- 由 JS 渲染 --></div>
+    </section>
+  </div>
+
+  <!-- ===== 视图：关于 ===== -->
+  <div class="view" id="view-about">
+    <section class="section about-grid">
+      <div class="avatar-box">
+        <img src="miku2.png" width="120" height="120" style="border-radius:50%;border:3px solid var(--white);box-shadow:var(--shadow);object-fit:cover">
+        <div class="avatar-name">kong</div>
+        <div class="avatar-role">开发者 / 写作者</div>
+      </div>
+      <div class="about-body">
+        <h2>关于我</h2>
+        <p>。</p>
+        <p>。</p>
+        <div class="about-info">
+          <div class="info-item"><div class="i-label">坐标</div><div class="i-value">中国 · 郑州</div></div>
+          <div class="info-item"><div class="i-label">职业</div><div class="i-value">软件开发</div></div>
+          <div class="info-item"><div class="i-label">邮箱</div><div class="i-value">shenyou2024@outlook.com<br>kong-zou@outlook.com<br>shenyou2024@icloud.com</div></div>
+          <div class="info-item"><div class="i-label">爱好</div><div class="i-value">刷抖音/看网文/二次元</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== 视图：文章详情 ===== -->
+  <div class="view" id="view-post">
+    <article>
+      <header class="post-head">
+        <span class="back" id="postBack">← 返回</span>
+        <h1 id="postTitle"></h1>
+        <div class="post-meta">
+          <span id="postDate"></span>
+          <span id="postTag"></span>
+          <span id="postRead"></span>
+        </div>
+      </header>
+      <div class="post-body" id="postBody"><!-- 由 JS 渲染 --></div>
+    </article>
+  </div>
+
+</main>
+
+<!-- ===== 页脚 ===== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>© 2026 kong-zou·  ヽ(•̀ω•́ )ゝ<a href="#/home">&</a> 维护</span>
+    <span><a href="#/home">回到顶部</a></span>
+  </div>
+</footer>
+
+<script>
+/* ============ 文章数据（示例，替换成你的内容即可） ============ */
+var POSTS = [                                  /*写文章的地方*/
+{
+    id:"p0",
+    title:"MIKU",
+    date:"2026-08-12",
+    tag:"随笔",
+    words:680,
+    excerpt:"MIKU",
+    body:"<p></p>"
+  },
+
+  {
+    id:"p1",
+    title:"我的第一篇博客：为什么要写博客",
+    date:"2026-08-12",
+    tag:"随笔",
+    words:680,
+    excerpt:"写博客不是为了给别人看，而是为了给自己一个整理思绪的地方。今天聊聊我为什么开始写作。",
+    body:"<p>第一次正经写博客，心情有点像第一次搬家：东西很多，不知道从哪儿收拾起。</p><p>写博客最大的意义，是它逼着我把模糊的想法变成清晰的文字。很多知识你以为自己懂了，写下来才发现漏洞百出。</p><h3>写给谁看</h3><p>首先写给自己。过三个月回头看，能想起当时踩过的坑；过三年回头看，能看到自己成长的速度。</p><p>其次是写给有同样困惑的人。网络时代最稀缺的不是信息，而是经过筛选和验证的经验。</p><blockquote>写作是思考的显影液。</blockquote><p>所以别等「准备好」再写，先写起来，在写的过程中慢慢变好。</p>"
+  },
+  {
+    id:"p2",
+    title:"CentOS 7 上配置共享文件夹的完整记录",
+    date:"2026-09-02",
+    tag:"技术",
+    words:920,
+    excerpt:"在 VMware 里给 CentOS 7 配置宿主机共享文件夹，从装工具到开机自动挂载，踩过的坑都记在这里。",
+    body:"<p>VMware 里设置了共享文件夹，虚拟机里却找不到，这是新手最容易卡住的地方。</p><p>原因很简单：宿主机设置共享 ≠ 虚拟机自动挂载。CentOS 7 里还需要安装工具并手动挂载。</p><h3>第一步：安装 open-vm-tools</h3><p>执行 <code>yum install -y open-vm-tools fuse</code>，然后启动服务 <code>systemctl start vmtoolsd</code>。</p><h3>第二步：手动挂载</h3><p>创建挂载点并挂载：</p><pre style=\"background:#EFE9DC;border:1px solid #D9D2C2;border-radius:3px;padding:14px;overflow:auto;font-size:14px;margin-bottom:16px\"><code>mkdir -p /mnt/hgfs&#10;vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other</code></pre><h3>第三步：开机自动挂载</h3><p>写入 <code>/etc/fstab</code>，注意加 <code>nonempty</code> 选项，否则挂载点目录里有文件时会报错。</p><p>搞定之后，<code>/mnt/hgfs</code> 里就能看到宿主机共享的文件夹了，两边实时同步。</p>"
+  },
+  {
+    id:"p3",
+    title:"初学者的十条 Linux 常用命令",
+    date:"2026-09-10",
+    tag:"教程",
+    words:540,
+    excerpt:"不用背全部命令，先掌握这十条，就能在服务器上完成 80% 的日常工作。",
+    body:"<p>很多初学者拿到 Linux 服务器第一反应是：这么多命令，从哪学起？</p><p>其实日常使用翻来覆去就那么几条，先掌握它们就够了。</p><h3>核心十条</h3><ul><li><code>pwd</code> —— 我在哪</li><li><code>ls</code> —— 这里有什么</li><li><code>cd</code> —— 去哪儿</li><li><code>cat / less</code> —— 看文件</li><li><code>mkdir / touch</code> —— 建目录 / 建文件</li><li><code>cp / mv / rm</code> —— 复制 / 移动 / 删除</li><li><code>sudo</code> —— 管理员权限</li><li><code>yum install</code> —— 装软件</li><li><code>systemctl</code> —— 管服务</li><li><code>grep</code> —— 搜索</li></ul><p>记住一个技巧：<strong>命令记不全就按 Tab 补全，忘了用法就用 <code>man 命令</code></strong>。</p><p>剩下的命令，遇到具体问题再学，比一开始就背命令手册高效得多。</p>"
+  },
+  {
+    id:"p4",
+    title:"关于写作频率的一点思考",
+    date:"2026-09-18",
+    tag:"随笔",
+    words:460,
+    excerpt:"日更不可持续，年更等于没写。我找到了自己的节奏。",
+    body:"<p>刚开始写作的时候，总想给自己定个日更目标，结果坚持了三天就放弃了。</p><p>后来想明白了一件事：<strong>写作频率应该由你的生活密度决定，而不是由自律决定</strong>。</p><p>有输入才有输出。读了一本好书、解决了一个 bug、去了一座新城市，这些都是写作的素材。素材攒够了，自然写得出来。</p><blockquote>与其强迫自己每天写，不如认真生活，然后如实记录。</blockquote><p>我的节奏：每周至少一篇，不追求数量，只要求每一篇都言之有物。</p>"
+  }
+];
+
+/* ============ 分类统计 ============ */
+function getCats(){
+  var map = {};
+  POSTS.forEach(function(p){
+    map[p.tag] = map[p.tag] || {name:p.tag,count:0};
+    map[p.tag].count++;
+  });
+  return Object.keys(map).map(function(k){return map[k];});
+}
+
+/* ============ 渲染：首页 ============ */
+function renderHome(){
+  var tl = document.getElementById("recentTimeline");
+  var recent = POSTS.slice(0,3);
+  var html = "";
+  recent.forEach(function(p,i){
+    var d = p.date.split("-");
+    html += '<div class="tl-date"><span class="year">'+d[1]+"月</span>"+d[0]+"年</div>";
+    html += '<div class="tl-node"><span class="tl-dot"></span>'+(i<recent.length-1?'<span class="tl-line"></span>':"")+"</div>";
+    html += '<div class="tl-card" onclick="openPost(\''+p.id+'\')">'
+         +  "<h3>"+p.title+"</h3>"
+         +  "<p>"+p.excerpt+"</p>"
+         +  '<div class="tl-tags"><span class="tag">'+p.tag+"</span></div></div>";
+  });
+  tl.innerHTML = html;
+
+  var cats = getCats();
+  var grid = document.getElementById("catGrid");
+  var descs = {技术:"开发与运维的踩坑记录",教程:"一步步教到会为止",随笔:"生活与思考的碎片"};
+  grid.innerHTML = cats.map(function(c){
+    return '<div class="cat-card" onclick="location.hash=\'#/archive\'">'
+      + '<div class="c-name">'+c.name+"</div>"
+      + '<div class="c-count">'+c.count+" 篇</div>"
+      + '<div class="c-desc">'+(descs[c.name]||"分类文章")+"</div></div>";
+  }).join("");
+
+  document.getElementById("statPosts").textContent = POSTS.length;
+  var words = POSTS.reduce(function(s,p){return s+p.words;},0);
+  document.getElementById("statWords").textContent = words;
+  var years = new Set(POSTS.map(function(p){return p.date.slice(0,4);})).size;
+  document.getElementById("statYears").textContent = years;
+}
+
+/* ============ 渲染：归档 ============ */
+var currentFilter = "全部";
+function renderArchive(){
+  var bar = document.getElementById("filterBar");
+  var cats = getCats();
+  var btns = ['<button class="filter-btn'+(currentFilter==="全部"?" on":"")+'" onclick="setFilter(\'全部\')">全部</button>'];
+  btns = btns.concat(cats.map(function(c){
+    return '<button class="filter-btn'+(currentFilter===c.name?" on":"")+'" onclick="setFilter(\''+c.name+"')\">"+c.name+"</button>";
+  }));
+  bar.innerHTML = btns.join("");
+
+  var list = POSTS.filter(function(p){return currentFilter==="全部"||p.tag===currentFilter;});
+  if(!list.length){
+    document.getElementById("archiveList").innerHTML = '<div class="empty">这个分类还没有文章</div>';
+    return;
+  }
+  document.getElementById("archiveList").innerHTML = list.map(function(p){
+    return '<div class="arc-item" onclick="openPost(\''+p.id+'\')">'
+      + '<span class="a-date">'+p.date+"</span>"
+      + '<span class="a-title">'+p.title+"</span>"
+      + '<span class="a-tag">'+p.tag+"</span></div>";
+  }).join("");
+}
+function setFilter(name){
+  currentFilter = name;
+  renderArchive();
+}
+
+/* ============ 渲染：文章详情 ============ */
+function openPost(id){
+  var p = POSTS.find(function(x){return x.id===id;});
+  if(!p) return;
+  location.hash = "#/post/"+id;
+}
+function renderPost(id){
+  var p = POSTS.find(function(x){return x.id===id;});
+  if(!p){location.hash="#/home";return;}
+  document.getElementById("postTitle").textContent = p.title;
+  document.getElementById("postDate").textContent = p.date;
+  document.getElementById("postTag").textContent = "分类 · "+p.tag;
+  document.getElementById("postRead").textContent = "约 "+p.words+" 字";
+  document.getElementById("postBody").innerHTML = p.body;
+}
+
+/* ============ 路由 ============ */
+function route(){
+  var hash = location.hash || "#/home";
+  var parts = hash.replace(/^#\//,"").split("/");
+  var page = parts[0] || "home";
+  var views = ["home","archive","about","post"];
+  var target = views.indexOf(page) >= 0 ? page : "home";
+
+  document.querySelectorAll(".view").forEach(function(v){v.classList.remove("active");});
+  document.getElementById("view-"+target).classList.add("active");
+
+  document.querySelectorAll(".nav-links a").forEach(function(a){
+    a.classList.toggle("active", a.getAttribute("data-nav")===target);
+  });
+
+  if(target==="home") renderHome();
+  if(target==="archive") renderArchive();
+  if(target==="post") renderPost(parts[1]||"");
+  window.scrollTo(0,0);
+}
+
+/* ============ 事件 ============ */
+document.querySelectorAll("[data-goto]").forEach(function(el){
+  el.addEventListener("click",function(){location.hash="#/"+el.getAttribute("data-goto");});
+});
+document.getElementById("postBack").addEventListener("click",function(){
+  location.hash = currentFilter==="全部" ? "#/archive" : "#/archive";
+});
+window.addEventListener("hashchange",route);
+route();
+</script>
+</body>
+</html>
