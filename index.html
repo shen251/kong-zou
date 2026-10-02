@@ -7,7 +7,7 @@
 <meta name="description" content="kong。">
 <link rel="icon" href="icon.png">
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
-<style>body{display:none}</style>
+<style>
 /* ============ 设计令牌 ============ */
 :root{
   --ink:#2A4A52;        /* 主文字：深青灰 */
@@ -255,22 +255,6 @@ img,svg{display:block}
 </style>
 </head>
 <body>
-<script>
-(function(){
-  var PASSWORD = "kong";
-  if(sessionStorage.getItem("ok") !== "1"){
-    var p = prompt("请输入访问密码：");
-    if(p !== PASSWORD){
-      alert("密码错误");
-      document.body.style.display = "none";
-      return;
-    }
-    sessionStorage.setItem("ok","1");
-  }
-  document.body.style.display = "";
-})();
-</script>
-
 
 <!-- ===== 顶部导航 ===== -->
 <header class="nav">
