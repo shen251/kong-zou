@@ -125,6 +125,50 @@ img,svg{display:block}
 .section-head .more{font-size:14px;color:var(--ink-soft);cursor:pointer;transition:color .2s}
 .section-head .more:hover{color:var(--accent)}
 
+/* ============  ============ */
+.quote-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:24px;
+}
+.q-card{
+  background:var(--paper-2);
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  transition:transform .25s,box-shadow .25s;
+}
+.q-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(57,197,187,.15)}
+.q-imgwrap{position:relative;overflow:hidden}
+.q-imgwrap img{
+  width:100%;height:200px;object-fit:cover;display:block;
+  border-bottom:3px solid var(--accent);
+}
+.q-time{
+  position:absolute;top:10px;left:10px;
+  background:rgba(22,52,61,.65);color:#fff;
+  border-radius:999px;padding:4px 12px;
+  font-size:12px;letter-spacing:.5px;
+}
+.q-refresh{
+  position:absolute;top:10px;right:10px;
+  background:rgba(22,52,61,.65);color:#fff;
+  border:none;border-radius:999px;padding:6px 14px;
+  font-size:12px;cursor:pointer;opacity:.9;
+  transition:background .2s,opacity .2s;
+}
+.q-refresh:hover{opacity:1;background:var(--accent)}
+.q-body{padding:16px 18px 18px}
+.q-title{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink-deep);margin-bottom:8px}
+.q-title::before{content:"◈ ";color:var(--accent)}
+.q-text{font-size:14px;line-height:1.9;color:var(--ink)}
+.q-moreq{
+  display:inline-block;margin-top:10px;
+  font-size:12px;color:var(--accent);cursor:pointer;
+  transition:color .2s;
+}
+.q-moreq:hover{color:var(--ink-deep)}
+
 /* ============ 文章时间轴 ============ */
 .timeline{display:grid;grid-template-columns:110px 20px 1fr;column-gap:16px}
 .tl-node{grid-column:2;display:flex;flex-direction:column;align-items:center}
@@ -263,6 +307,7 @@ img,svg{display:block}
     <nav class="nav-links" id="navLinks">
       <a href="#/home" data-nav="home" class="active">首页</a>
       <a href="#/archive" data-nav="archive">归档</a>
+      <a href="#/quotes" data-nav="quotes">(￣▽￣)"</a>
       <a href="#/about" data-nav="about">关于</a>
     </nav>
   </div>
@@ -312,6 +357,17 @@ img,svg{display:block}
       </div>
       <div class="filter-bar" id="filterBar"><!-- 由 JS 渲染 --></div>
       <div class="archive-list" id="archiveList"><!-- 由 JS 渲染 --></div>
+    </section>
+  </div>
+
+  <!-- ===== 视图：(￣▽￣)" ===== -->
+  <div class="view" id="view-quotes">
+    <section class="section">
+      <div class="section-head">
+        <h2></h2>
+        <span class="more" id="quoteCount"></span>
+      </div>
+      <div class="quote-grid" id="quoteGrid"><!-- 由 JS 渲染 --></div>
     </section>
   </div>
 
@@ -414,6 +470,88 @@ var POSTS = [                                  /*写文章的地方*/
   }
 ];
 
+/* ============ :( ============ */
+var QUOTES = [
+  {title:"末日三问",time:"202406",quotes:["我大概是世界上最幸福的女孩了。 ——珂朵莉","已经……不用再战斗了，因为你在身边。 ——珂朵莉"],imgs:["动漫/01_末日三问.webp","动漫/01末日三问_1.webp","动漫/01末日三问_2.webp"]},
+  {title:"境界的彼方",time:"202408",quotes:["我不喜欢世界，但我喜欢你。 ——栗山未来","没有未来的未来，不是我想要的未来。 ——栗山未来"],imgs:["动漫/02_境界的彼方.webp","动漫/02境界的彼方_1.webp"]},
+  {title:"游戏人生",time:"2023",quotes:["【十】大家一起和平地玩吧!!","与其祈祷神明，不如相信自己的计算。 ——空白"],imgs:["动漫/03游戏人生_1.webp","动漫/03游戏人生_2.webp"]},
+  {title:"天使的心跳",time:"202408",quotes:["就算全世界都忘了你，我也会记得。 ——日向秀树","人生或许充满遗憾，但能遇见你们，就是最好的结局。 ——音无结弦"],imgs:["动漫/04_天使的心跳.webp","动漫/04天使的心跳_1.webp"]},
+  {title:"樱花庄的宠物女孩",time:"202408",quotes:["不是逃避现实，而是选择追逐梦想。 ——神田空太","没有才能的人，才更要拼命抓住光。 ——神田空太"],imgs:["动漫/05_樱花庄的宠物女孩.webp","动漫/05樱花庄的宠物女孩_1.webp","动漫/05樱花庄的宠物女孩_2.webp"]},
+  {title:"孤独摇滚",time:"202407",quotes:["就算不擅长，也想用自己的方式闪耀。 ——后藤一里","吉他不是逃避世界的壳，是传递心意的语言。 ——后藤一里"],imgs:["动漫/06孤独摇滚_1.webp"]},
+  {title:"星之梦",time:"202408",quotes:["欢迎光临，这里是星象馆。 ——星野梦美","即使只剩一个人，星星也会为你闪耀。 ——星野梦美"],imgs:["动漫/07_星之梦.webp","动漫/07星之梦_1.webp","动漫/07星之梦_2.webp"]},
+  {title:"亚托莉",time:"202408",quotes:["即使无法继续走下去，我也想守护你的未来。 ——亚托莉","我，最喜欢老师了。 ——亚托莉"],imgs:["动漫/08_亚托莉.webp"]},
+  {title:"邻座艾莉同学",time:"202408",quotes:["我才不会输给这样的你。 ——艾莉","嘴上说着讨厌，心里却一直看着你。 ——艾莉"],imgs:["动漫/09_邻座艾莉同学.webp","动漫/09邻座艾莉同学_1.webp"]},
+  {title:"某科学的超电磁炮",time:"202405",quotes:["即使与全世界为敌，我也会保护重要的东西。 ——御坂美琴","被打倒一百次，就第一百零一次站起来。 ——御坂美琴"],imgs:["动漫/10_某科学的超电磁炮.webp","动漫/10某科学的超电磁炮_1.webp"]},
+  {title:"一方通行",time:"202406",quotes:["既然是恶党，就用恶党的方式去守护吧。 ——一方通行","最强的人，也想守护那个笨蛋到最后。 ——一方通行"],imgs:["动漫/11_一方通行.webp","动漫/11一方通行_1.webp","动漫/11一方通行_2.webp"]},
+  {title:"铃芽之旅",time:"202405",quotes:["无论你在哪里，我都会去见你。 ——岩户铃芽","我出发了，去有你的地方。 ——岩户铃芽"],imgs:["动漫/12_铃芽之旅.webp","动漫/12铃芽之旅_1.webp"]},
+  {title:"天气之子",time:"202405",quotes:["比起晴天，我更需要你。 ——森岛帆高","就算世界一直下雨，只要你在，就是晴天。 ——阳菜"],imgs:["动漫/13_天气之子.webp","动漫/13天气之子_1.webp"]},
+  {title:"你的名字",time:"202406",quotes:["无论你在世界的哪个角落，我都会再次找到你。 ——立花泷","重要的人，不想忘记的人，绝对不能忘的人。 ——宫水三叶"],imgs:["动漫/14_你的名字.webp","动漫/14你的名字_1.webp","动漫/14你的名字_2.webp","动漫/14你的名字_3.webp","动漫/14你的名字_4.webp"]},
+  {title:"言叶之庭",time:"202408",quotes:["如果下雨的话，就能遇见你。 ——雪野百香里","并非逃避，只是还没准备好迈出那一步。 ——雪野百香里"],imgs:["动漫/15_言叶之庭.webp","动漫/15言叶之庭_1.webp","动漫/15言叶之庭_2.webp"]},
+  {title:"你好世界",time:"202408",quotes:["就算世界毁灭，我也要救你。 ——坚书直实","数据里的心意，也是真实的心意。 ——一行瑠璃"],imgs:["动漫/16_你好世界.webp","动漫/16你好世界_1.webp"]},
+  {title:"来自多彩世界的明天",time:"202408",quotes:["我想记住这个多彩的世界。 ——月白瞳美","看不见颜色的人，才更懂颜色的珍贵。 ——月白瞳美"],imgs:["动漫/17_来自多彩世界的明天.webp"]},
+  {title:"转生王女",time:"202408",quotes:["世界的规则，由我来改写。 ——安妮丝菲亚","就算与全世界为敌，我也要和你站在一起。 ——尤菲莉亚"],imgs:["动漫/18_转生王女.webp"]},
+  {title:"干物妹小埋",time:"202408",quotes:["哥哥，我饿了。 ——土间埋","在家能放飞自我的我，也是真实的我。 ——土间埋"],imgs:["动漫/19_干物妹.webp"]},
+  {title:"义妹生活",time:"202408",quotes:["我们的关系，由我们自己来定义。 ——绫濑沙季","家人不是天生的，是慢慢相处出来的。 ——绫濑沙季"],imgs:["动漫/20_义妹生活.webp"]},
+  {title:"邻家的天使同学",time:"202408",quotes:["你总是这样温柔，让人不知所措。 ——椎名真昼","别把我当天使，我只想做你身边的人。 ——椎名真昼"],imgs:["动漫/21_邻家的天使同学.webp"]},
+  {title:"来自风平浪静的明天",time:"202408",quotes:["即使隔着大海，思念也不会断。 ——先岛光","喜欢一个人，是不需要理由的。 ——先岛光"],imgs:["动漫/22_来自风平浪静的明天.webp"]},
+  {title:"宿命回响",time:"202408",quotes:["我会背负你的命运，继续活下去。 ——磔人","音乐不会说谎，歌声里藏着真心。 ——安娜"],imgs:["动漫/23_宿命回响.webp"]},
+  {title:"冰菓",time:"202408",quotes:["我很好奇。 ——千反田爱瑠","没有必要的事就不做，必要的事就尽快做。 ——折木奉太郎"],imgs:["动漫/24_冰菓.webp","动漫/24冰菓_1.webp"]},
+  {title:"可塑性记忆",time:"202409～10",quotes:["即使记忆会消失，喜欢你的心情也不会。 ——艾拉","愿你与重要的人，终能再度重逢。 ——艾拉"],imgs:["动漫/25_可塑性记忆.webp","动漫/25可塑性记忆_1.webp"]},
+  {title:"通往夏天的隧道",time:"202410",quotes:["我想去的地方，是你的身边。 ——塔野薰","那个夏天，是我全部的青春。 ——华伶"],imgs:["动漫/26_通往夏天的隧道.webp"]},
+  {title:"青春猪头少年",time:"202410~11",quotes:["我喜欢的，是你这个人。 ——梓川咲太","比起遥远的未来，我更珍惜有你的现在。 ——梓川咲太"],imgs:["动漫/27_青春猪头少年.webp"]},
+  {title:"魔王2099",time:"202410~20250106",quotes:["即使时代变了，王者依旧是王者。 ——贝尔托利亚","2099年，王座依旧属于魔王。 ——贝尔托利亚"],imgs:["动漫/28_魔王2099.webp"]},
+  {title:"乐园追放",time:"20250106",quotes:["人类的可能性，不止于此。 ——安吉拉","身体只是容器，心才是人类的证明。 ——安吉拉"],imgs:["动漫/29_乐园追放.webp"]},
+  {title:"侦探已死",quotes:["因为我是侦探啊。 ——希耶丝塔","世界上没有完美的犯罪，只有还没被发现的真相。 ——希耶丝塔"],imgs:["动漫/30_侦探已死.webp"]},
+  {title:"声之形",time:"20250210",quotes:["我想和你做朋友。 ——西宫硝子","想说的话，就要好好说出来。 ——西宫硝子"],imgs:["动漫/31_声之形.webp","动漫/31声之形_1.webp"]},
+  {title:"夏日幽魂",time:"20250301",quotes:["少年们的夏天，是相遇也是告别。 ——青沼向日葵","我们只是，想在夏天多停留一会儿。 ——青沼向日葵"],imgs:["动漫/32_夏日幽魂.webp"]},
+  {title:"萤火之森",time:"20250404",quotes:["我喜欢你，但已经不能触碰你了。 ——银","谢谢你，让我遇见了整个夏天。 ——萤"],imgs:["动漫/33_萤火之森.webp"]},
+  {title:"散华礼弥",time:"202504",quotes:["即使变成僵尸，我也想和你在一起。 ——散华礼弥","只要能在你身边，变成什么都可以。 ——散华礼弥"],imgs:["动漫/34_散华礼弥.webp"]},
+  {title:"Charlotte",time:"20250616",quotes:["错的不是我们，是世界。 ——乙坂有宇","因为活着才会痛苦，也因为痛苦才证明活着。 ——友利奈绪"],imgs:["动漫/35_Charlotte.webp"]},
+  {title:"电波女与青春男",time:"202506",quotes:["我是宇宙人哦。 ——藤和艾莉欧","青春，就是被电波环绕的季节。 ——藤和艾莉欧"],imgs:["动漫/36_电波女与青春男.webp"]},
+  {title:"白圣女与黑牧师",time:"202507",quotes:["你总是这么温柔。 ——塞西莉亚","就算是圣女，也会有心动的时候。 ——塞西莉亚"],imgs:["动漫/37_白圣女与黑牧师.webp"]},
+  {title:"夏日重现",time:"202507",quotes:["就算重复一万次，我也会选择救你。 ——网代慎平","重复也好，痛苦也好，结局由我来决定。 ——网代慎平"],imgs:["动漫/38_夏日重现.webp","动漫/38夏日重现_1.webp"]},
+  {title:"成神之日",time:"202507",quotes:["因为世界快要结束了，所以更要珍惜每一天。 ——雏","即使明天是世界末日，今天也要好好生活。 ——雏"],imgs:["动漫/39_成神之日.webp"]},
+  {title:"CLANNAD",quotes:["能遇见你，真是太好了。 ——古河渚","能哭的地方，只有厕所和爸爸的怀里。 ——冈崎汐"],imgs:["动漫/40_CLANNAD.webp"]},
+  {title:"夏日口袋",time:"202509",quotes:["这个夏天，会成为永远的记忆。 ——鹰原羽依里","潮鸣响起时，就是我回来的信号。 ——鸣濑白羽"],imgs:["动漫/41_夏日口袋.webp","动漫/41_夏日口袋_1.webp"]},
+  {title:"玉子市场",time:"202509",quotes:["我最喜欢这个小镇了。 ——北白川玉子","年糕也好，恋爱也好，都要趁热。 ——北白川玉子"],imgs:["动漫/42_玉子市场.webp"]},
+  {title:"路人女主的养成方法",time:"202512",quotes:["我的存在感很低，但心意是真实的。 ——加藤惠","你眼中的路人，是我全部的风景。 ——加藤惠"],imgs:["动漫/43_路人女主的养成方法.webp","动漫/43路人女主的养成方法_1.webp","动漫/43路人女主的养成方法_2.webp","动漫/43路人女主的养成方法_3.webp"]},
+  {title:"比宇宙更远的地方",time:"20260103",quotes:["青春，是不需要理由的。 ——玉木真理","迈出第一步，就已经超过了昨天的自己。 ——小渊泽报濑"],imgs:["动漫/44_比宇宙更远的地方.webp"]},
+  {title:"光死去的夏天",time:"202601",quotes:["光死去的那个夏天，一切都变了。 ——佳代","有些秘密，最好永远埋葬在那个夏天。 ——佳代"],imgs:["动漫/45_光死去的夏天.webp"]},
+  {title:"SSSS电光机王",time:"20260323",quotes:["我相信你。 ——麻中蓬","那啥~光线！！o(￣▽￣)ｄ ——南梦芽"],imgs:["动漫/46_SSSS电光机王.webp"]},
+  {title:"加速世界",time:"20260629",quotes:["不要小看我的决心。 ——黑雪姬","就算现实再残酷，也要加速向前。 ——有田春雪"],imgs:["动漫/47_加速世界.webp"]},
+  {title:"超时空辉夜姬",time:"20260126",quotes:["好久没吃过这么美味的饭菜了 害我身体都充满了喜悦 /(ㄒoㄒ)/~~  ——彩叶"],imgs:["动漫/48_超时空辉夜姬1.webp","动漫/48_超时空辉夜姬2.webp","动漫/48_超时空辉夜姬3.webp","动漫/48_超时空辉夜姬4.webp","动漫/48_超时空辉夜姬5.webp","动漫/48_超时空辉夜姬6.webp"]},
+  {title:"",quotes:[],imgs:["动漫/49_1.webp","动漫/49_2.webp","动漫/49_3.webp","动漫/49_4.webp"]}
+];
+var qImgIdx = {};
+var qQuoteIdx = {};
+function renderQuotes(){
+  var grid = document.getElementById("quoteGrid");
+  grid.innerHTML = QUOTES.map(function(q,i){
+    var more = q.imgs.length > 1;
+    var hasQuote = q.quotes && q.quotes.length > 0;
+    var moreQ = q.quotes && q.quotes.length > 1;
+    var titleHtml = q.title ? '<div class="q-title">'+q.title+"</div>" : "";
+    var quoteHtml = hasQuote ? '<div class="q-text" id="qtext-'+i+'">'+q.quotes[0]+"</div>" : "";
+    var qBtnHtml = moreQ ? '<span class="q-moreq" onclick="nextQuote('+i+')"> ↻</span>' : "";
+    var btnHtml = more ? '<button class="q-refresh" onclick="nextImg('+i+')">换图 ↻</button>' : "";
+    var timeHtml = q.time ? '<span class="q-time">'+q.time+"</span>" : "";
+    return '<div class="q-card">'
+      + '<div class="q-imgwrap"><img id="qimg-'+i+'" src="'+q.imgs[0]+'" alt="'+q.title+'" loading="lazy">'+timeHtml+btnHtml+"</div>"
+      + '<div class="q-body">'+titleHtml+quoteHtml+qBtnHtml+"</div></div>";
+  }).join("");
+  document.getElementById("quoteCount").textContent = QUOTES.length+" 部作品";
+}
+function nextImg(i){
+  var q = QUOTES[i];
+  qImgIdx[i] = (qImgIdx[i]||0) + 1;
+  document.getElementById("qimg-"+i).src = q.imgs[qImgIdx[i] % q.imgs.length];
+}
+function nextQuote(i){
+  var q = QUOTES[i];
+  qQuoteIdx[i] = (qQuoteIdx[i]||0) + 1;
+  document.getElementById("qtext-"+i).textContent = q.quotes[qQuoteIdx[i] % q.quotes.length];
+}
+
 /* ============ 分类统计 ============ */
 function getCats(){
   var map = {};
@@ -506,7 +644,7 @@ function route(){
   var hash = location.hash || "#/home";
   var parts = hash.replace(/^#\//,"").split("/");
   var page = parts[0] || "home";
-  var views = ["home","archive","about","post"];
+  var views = ["home","archive","quotes","about","post"];
   var target = views.indexOf(page) >= 0 ? page : "home";
 
   document.querySelectorAll(".view").forEach(function(v){v.classList.remove("active");});
@@ -518,6 +656,7 @@ function route(){
 
   if(target==="home") renderHome();
   if(target==="archive") renderArchive();
+  if(target==="quotes") renderQuotes();
   if(target==="post") renderPost(parts[1]||"");
   window.scrollTo(0,0);
 }
