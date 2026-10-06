@@ -532,7 +532,7 @@ function renderQuotes(){
     var moreQ = q.quotes && q.quotes.length > 1;
     var titleHtml = q.title ? '<div class="q-title">'+q.title+"</div>" : "";
     var quoteHtml = hasQuote ? '<div class="q-text" id="qtext-'+i+'">'+q.quotes[0]+"</div>" : "";
-    var qBtnHtml = moreQ ? '<span class="q-moreq" onclick="nextQuote('+i+')"> ↻</span>' : "";
+    var qBtnHtml = moreQ ? '<span class="q-moreq" onclick="nextQuote('+i+')">   ↻   </span>' : "";
     var btnHtml = more ? '<button class="q-refresh" onclick="nextImg('+i+')">换图 ↻</button>' : "";
     var timeHtml = q.time ? '<span class="q-time">'+q.time+"</span>" : "";
     return '<div class="q-card">'
